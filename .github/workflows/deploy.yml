@@ -86,7 +86,7 @@ jobs:
         task-definition: ${{ steps.task-def-frontend.outputs.task-definition }}
         service: ${{ env.ECS_SERVICE_FRONTEND }}
         cluster: ${{ env.ECS_CLUSTER }}
-        wait-for-service-stability: true
+        wait-for-service-stability: false
 
     - name: Fill in the new image ID in the Amazon ECS task definition (Backend)
       id: task-def-backend
@@ -102,7 +102,7 @@ jobs:
         task-definition: ${{ steps.task-def-backend.outputs.task-definition }}
         service: ${{ env.ECS_SERVICE_BACKEND }}
         cluster: ${{ env.ECS_CLUSTER }}
-        wait-for-service-stability: true
+        wait-for-service-stability: false
 
     - name: Fill in the new image ID in the Amazon ECS task definition (Pagos)
       id: task-def-pagos
@@ -118,4 +118,4 @@ jobs:
         task-definition: ${{ steps.task-def-pagos.outputs.task-definition }}
         service: ${{ env.ECS_SERVICE_PAGOS }}
         cluster: ${{ env.ECS_CLUSTER }}
-        wait-for-service-stability: true
+        wait-for-service-stability: false
