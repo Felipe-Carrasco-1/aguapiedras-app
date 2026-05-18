@@ -1,0 +1,188 @@
+<div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+  <h2 class="fw-bold text-success m-0">Panel de Administración de Reservas</h2>
+  <button (click)="logout()" class="btn btn-outline-danger shadow-sm">
+    Cerrar Sesión <i class="bi bi-box-arrow-right"></i>
+  </button>
+</div>
+
+<div *ngIf="loading" class="text-center mt-5">
+  <div class="spinner-border text-success" role="status">
+    <span class="visually-hidden">Cargando datos...</span>
+  </div>
+</div>
+
+<div *ngIf="!loading" class="row">
+  <!-- Left Side: Gantt Ocupación View -->
+  <div class="col-lg-8 mb-4">
+    <div class="card border-0 shadow-sm rounded-3 p-4">
+      <h4 class="fw-bold text-success border-bottom pb-2 mb-3">Calendario y Bloques de Ocupación</h4>
+      <p class="text-muted small">Visualiza todas las reservas activas, pendientes de pago y periodos de mantenimiento de cada cabaña.</p>
+      
+      <div *ngFor="let cabana of cabanas" class="mb-4 p-3 border rounded-3 bg-light">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h5 class="fw-bold text-dark m-0">{{ cabana.nombre }}</h5>
+          <span class="badge bg-success">${{ cabana.precio_base }} / noche</span>
+        </div>
+        
+        <!-- Reservation blocks for this cabin -->
+        <div class="d-flex flex-column gap-2 mt-2">
+          <div *ngIf="getCabanaReservas(cabana.id).length === 0" class="text-muted small italic">
+            Sin reservas ni bloqueos activos en este periodo.
+          </div>
+          
+          <div *ngFor="let res of getCabanaReservas(cabana.id)" 
+               class="p-2 rounded-2 border d-flex justify-content-between align-items-center"
+               [class.border-success]="res.estado === 'pagada'"
+               [class.bg-success-subtle]="res.estado === 'pagada'"
+               [class.border-warning]="res.estado === 'pendiente' || res.estado === 'bloqueo_temporal'"
+               [class.bg-warning-subtle]="res.estado === 'pendiente' || res.estado === 'bloqueo_temporal'"
+               [class.border-danger]="res.estado === 'mantenimiento'"
+               [class.bg-danger-subtle]="res.estado === 'mantenimiento'">
+            
+            <div>
+              <span class="fw-bold text-dark">{{ res.nombre_cliente }}</span> 
+              <small class="text-muted ms-2">({{ res.email_cliente }})</small>
+              <div class="small mt-1">
+                <strong>Fechas:</strong> {{ res.fecha_checkin | date:'dd MMM yyyy' }} al {{ res.fecha_checkout | date:'dd MMM yyyy' }}
+              </div>
+            </div>
+            
+            <div class="text-end">
+              <span class="badge" 
+                    [class.bg-success]="res.estado === 'pagada'"
+                    [class.bg-warning]="res.estado === 'pendiente' || res.estado === 'bloqueo_temporal'"
+                    [class.bg-danger]="res.estado === 'mantenimiento'">
+                {{ res.estado | uppercase }}
+              </span>
+              <div class="small fw-bold text-dark mt-1" *ngIf="res.total_pago > 0">${{ res.total_pago }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Extras list in admin dashboard -->
+      <h4 class="fw-bold text-success border-bottom pb-2 mt-4 mb-3">Servicios Adicionales Activos</h4>
+      <p class="text-muted small">Estos servicios están configurados y disponibles para agregarse en el flujo de reservas de los clientes.</p>
+      <div class="row g-3">
+        <div class="col-md-6" *ngFor="let ex of extras">
+          <div class="p-3 border rounded-3 bg-light h-100 d-flex flex-column justify-content-between">
+            <div>
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <h6 class="fw-bold text-dark mb-0">{{ ex.nombre }}</h6>
+                <span class="badge bg-success">${{ ex.precio | number:'1.0-0' }}</span>
+              </div>
+              <p class="text-secondary small mb-0" style="line-height: 1.4;">{{ ex.descripcion }}</p>
+            </div>
+            <div class="text-end mt-2 pt-2 border-top">
+              <button class="btn btn-sm btn-outline-success px-3" (click)="onSelectExtra(ex)">Editar Servicio</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Right Side: Controls (Manual Blocking and Price Management) -->
+  <div class="col-lg-4">
+    <!-- Manual Booking/Block Card -->
+    <div class="card border-0 shadow-sm rounded-3 p-4 mb-4">
+      <h4 class="fw-bold text-success border-bottom pb-2 mb-3">Bloqueo por Mantenimiento</h4>
+      <p class="text-muted small">Registra mantenciones programadas para deshabilitar fechas específicas en el motor de reservas.</p>
+      
+      <form (ngSubmit)="onBlock()" #blockForm="ngForm">
+        <div class="mb-3">
+          <label class="form-label text-secondary fw-semibold">Selecciona Cabaña</label>
+          <select class="form-select" name="blockCabana" [(ngModel)]="selectedCabanaId" required>
+            <option [ngValue]="null" disabled>Elige una cabaña...</option>
+            <option *ngFor="let c of cabanas" [ngValue]="c.id">{{ c.nombre }}</option>
+          </select>
+        </div>
+        
+        <div class="mb-3">
+          <label class="form-label text-secondary fw-semibold">Fecha de Inicio</label>
+          <input type="date" class="form-control" name="blockIn" [(ngModel)]="blockCheckIn" required>
+        </div>
+        
+        <div class="mb-3">
+          <label class="form-label text-secondary fw-semibold">Fecha de Término</label>
+          <input type="date" class="form-control" name="blockOut" [(ngModel)]="blockCheckOut" required>
+        </div>
+        
+        <div class="mb-3">
+          <label class="form-label text-secondary fw-semibold">Motivo del Bloqueo</label>
+          <textarea class="form-control" name="reason" [(ngModel)]="blockReason" required placeholder="Ej. Pintura general, sanitización, cierre invernal..."></textarea>
+        </div>
+        
+        <button type="submit" 
+                class="btn btn-danger w-100 shadow-sm btn-lg"
+                [disabled]="!blockForm.valid || blockLoading">
+          <span *ngIf="blockLoading" class="spinner-border spinner-border-sm me-2"></span>
+          {{ blockLoading ? 'Registrando...' : 'Confirmar Bloqueo' }}
+        </button>
+      </form>
+    </div>
+
+    <!-- Season Price Management Card -->
+    <div class="card border-0 shadow-sm rounded-3 p-4">
+      <h4 class="fw-bold text-success border-bottom pb-2 mb-3">Ajuste de Tarifas</h4>
+      <p class="text-muted small">Modifica los precios base por noche según la temporada alta/baja.</p>
+      
+      <form (ngSubmit)="onUpdatePrice()" #priceForm="ngForm">
+        <div class="mb-3">
+          <label class="form-label text-secondary fw-semibold">Selecciona Cabaña</label>
+          <select class="form-select" name="priceCabana" [(ngModel)]="priceCabanaId" (change)="newPrice = null" required>
+            <option [ngValue]="null" disabled>Elige una cabaña...</option>
+            <option *ngFor="let c of cabanas" [ngValue]="c.id">{{ c.nombre }}</option>
+          </select>
+        </div>
+        
+        <div class="mb-4" *ngIf="priceCabanaId">
+          <label class="form-label text-secondary fw-semibold">Nueva Tarifa Base ($)</label>
+          <input type="number" class="form-control form-control-lg" name="price" [(ngModel)]="newPrice" required placeholder="Ej. 75000">
+        </div>
+        
+        <button type="submit" 
+                class="btn btn-success w-100 shadow-sm btn-lg"
+                [disabled]="!priceForm.valid || priceLoading">
+          <span *ngIf="priceLoading" class="spinner-border spinner-border-sm me-2"></span>
+          {{ priceLoading ? 'Actualizando...' : 'Actualizar Tarifa' }}
+        </button>
+      </form>
+    </div>
+
+    <!-- Additional Services Management Card -->
+    <div class="card border-0 shadow-sm rounded-3 p-4 mt-4">
+      <h4 class="fw-bold text-success border-bottom pb-2 mb-3">Administración de Servicios</h4>
+      <p class="text-muted small">Modifica las tarifas y descripciones del Spa, masajes y desayunos oficiales.</p>
+      
+      <form (ngSubmit)="onUpdateExtra()" #extraForm="ngForm">
+        <div class="mb-3">
+          <label class="form-label text-secondary fw-semibold">Selecciona Servicio</label>
+          <select class="form-select" name="adminExtra" [(ngModel)]="selectedExtraId" (change)="onSelectExtraById()" required>
+            <option [ngValue]="null" disabled>Elige un servicio...</option>
+            <option *ngFor="let ex of extras" [ngValue]="ex.id">{{ ex.nombre }}</option>
+          </select>
+        </div>
+        
+        <div class="mb-3" *ngIf="selectedExtraId">
+          <label class="form-label text-secondary fw-semibold">Tarifa ($)</label>
+          <input type="number" class="form-control form-control-lg" name="exPrice" [(ngModel)]="newExtraPrice" required placeholder="Ej. 15000">
+        </div>
+
+        <div class="mb-4" *ngIf="selectedExtraId">
+          <label class="form-label text-secondary fw-semibold">Descripción del Servicio</label>
+          <textarea class="form-control" name="exDesc" [(ngModel)]="newExtraDescription" required rows="3" placeholder="Descripción oficial del servicio..."></textarea>
+        </div>
+        
+        <button type="submit" 
+                class="btn btn-success w-100 shadow-sm btn-lg"
+                [disabled]="!extraForm.valid || extraLoading">
+          <span *ngIf="extraLoading" class="spinner-border spinner-border-sm me-2"></span>
+          {{ extraLoading ? 'Guardando...' : 'Guardar Cambios' }}
+        </button>
+      </form>
+    </div>
+
+  </div>
+</div>

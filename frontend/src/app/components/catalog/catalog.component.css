@@ -1,0 +1,241 @@
+/* Styles for Catalog Landing Page */
+
+/* Hero Section */
+.hero-section {
+  position: relative;
+  background-image: linear-gradient(rgba(18, 40, 26, 0.65), rgba(18, 40, 26, 0.75)), url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1600&q=80');
+  background-size: cover;
+  background-position: center;
+  border-radius: 16px;
+  padding: 100px 20px;
+  color: white;
+  margin-bottom: 50px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.hero-title {
+  font-size: 3.5rem;
+  font-weight: 800;
+  text-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  margin-bottom: 15px;
+}
+
+.hero-subtitle {
+  font-size: 1.5rem;
+  font-weight: 400;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  max-width: 700px;
+  margin: 0 auto 30px auto;
+  line-height: 1.6;
+}
+
+.whatsapp-btn {
+  background-color: #25d366 !important;
+  border-color: #25d366 !important;
+  color: white !important;
+  font-weight: 600 !important;
+  border-radius: 8px !important;
+  transition: all 0.3s ease !important;
+}
+
+.whatsapp-btn:hover {
+  background-color: #128c7e !important;
+  border-color: #128c7e !important;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3) !important;
+}
+
+/* Feature Section */
+.section-title {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 40px;
+  padding-bottom: 10px;
+  font-weight: 800;
+  color: var(--forest-dark);
+}
+
+.section-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 4px;
+  background-color: var(--moss-green);
+  border-radius: 2px;
+}
+
+.feature-box {
+  background: white;
+  border-radius: 12px;
+  padding: 30px 20px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+  transition: all 0.3s ease;
+}
+
+.feature-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(37, 77, 50, 0.08);
+  border-color: rgba(63, 123, 83, 0.2);
+}
+
+.feature-icon-wrapper {
+  width: 60px;
+  height: 60px;
+  border-radius: 50px;
+  background-color: var(--water-clear);
+  color: var(--moss-green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  margin: 0 auto 20px auto;
+}
+
+/* Cabin Deck Section */
+.cabin-card {
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: 16px !important;
+  overflow: hidden;
+  background: white;
+}
+
+.cabin-tag {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background-color: var(--forest-dark);
+  color: white;
+  padding: 5px 12px;
+  border-radius: 30px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.cabin-image-wrapper {
+  position: relative;
+  height: 240px;
+  overflow: hidden;
+}
+
+.cabin-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.cabin-card:hover .cabin-image {
+  transform: scale(1.06);
+}
+
+/* Spa / Wellness Section */
+.spa-banner {
+  background-image: linear-gradient(rgba(37, 77, 50, 0.85), rgba(37, 77, 50, 0.9)), url('https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1200&q=80');
+  background-size: cover;
+  background-position: center;
+  border-radius: 16px;
+  color: white;
+  padding: 60px 40px;
+  margin-top: 40px;
+  box-shadow: 0 10px 30px rgba(37, 77, 50, 0.15);
+}
+
+/* Promos Section */
+.promo-card {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+}
+
+.promo-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+  border-color: rgba(92, 64, 51, 0.15);
+}
+
+.promo-icon {
+  font-size: 2.2rem;
+  color: var(--accent-gold);
+  margin-bottom: 15px;
+}
+
+/* Reviews Section */
+.reviews-section {
+  background-color: var(--water-clear);
+  border-radius: 16px;
+  padding: 60px 40px;
+  margin-top: 60px;
+}
+
+.review-card {
+  background: white;
+  border-radius: 12px;
+  padding: 25px;
+  border: 1px solid rgba(0,0,0,0.03);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.02);
+  height: 100%;
+}
+
+.trust-badge {
+  display: inline-flex;
+  align-items: center;
+  background-color: #f1f8e9;
+  color: #33691e;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* Footer Section */
+.footer-section {
+  background-color: var(--forest-dark);
+  color: rgba(255, 255, 255, 0.7);
+  border-radius: 16px 16px 0 0;
+  padding: 60px 40px 20px 40px;
+  margin-top: 80px;
+  border-top: 4px solid var(--moss-green);
+}
+
+.footer-section h5 {
+  color: white !important;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.footer-link {
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-link:hover {
+  color: var(--accent-gold);
+}
+
+.footer-social-icon {
+  font-size: 1.5rem;
+  color: white;
+  transition: color 0.3s ease;
+}
+
+.footer-social-icon:hover {
+  color: var(--accent-gold);
+}
+
+/* Card Hover Shadow & Transitions for Services */
+.card-hover-shadow {
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.card-hover-shadow:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08) !important;
+}

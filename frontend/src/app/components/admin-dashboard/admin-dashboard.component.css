@@ -1,0 +1,23 @@
+.bg-success-subtle {
+  background-color: #d1e7dd !important;
+}
+
+.bg-warning-subtle {
+  background-color: #fff3cd !important;
+}
+
+.bg-danger-subtle {
+  background-color: #f8d7da !important;
+}
+
+.border-success {
+  border-color: #a3cfbb !important;
+}
+
+.border-warning {
+  border-color: #ffe69c !important;
+}
+
+.border-danger {
+  border-color: #f5c2c7 !important;
+}

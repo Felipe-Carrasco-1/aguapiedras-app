@@ -1,0 +1,30 @@
+<nav class="navbar navbar-expand-lg navbar-dark shadow-sm py-3" style="background-color: var(--forest-dark); border-bottom: 2px solid var(--moss-green);">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center fw-bold fs-4" routerLink="/cabanas">
+      <span class="me-2 text-success">🌿</span> Aguapiedras
+    </a>
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto gap-2">
+        <li class="nav-item">
+          <a class="nav-link px-3 fw-medium text-white" routerLink="/cabanas" routerLinkActive="active" style="border-radius: 6px;">Cabañas</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link px-3 fw-medium text-white" routerLink="/promociones" routerLinkActive="active" style="border-radius: 6px;">Promociones 🌟</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link px-3 fw-medium text-white" routerLink="/ruta" routerLinkActive="active" style="border-radius: 6px;">Mapa de Ruta</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link px-3 fw-semibold text-warning" routerLink="/admin/dashboard" routerLinkActive="active" style="border-radius: 6px; border: 1px dashed var(--accent-gold);">Panel Admin</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container mt-4">
+  <router-outlet></router-outlet>
+</div>

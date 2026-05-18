@@ -1,0 +1,188 @@
+<div *ngIf="loading" class="text-center mt-5">
+  <div class="spinner-border text-success" role="status">
+    <span class="visually-hidden">Cargando...</span>
+  </div>
+</div>
+
+<div *ngIf="!loading && cabana" class="row">
+  <div class="col-12 mb-4">
+    <a routerLink="/cabanas" class="btn btn-outline-success mb-3 shadow-sm">&larr; Volver al catálogo</a>
+    <h2 class="display-5 text-dark fw-bold">{{ cabana.nombre }}</h2>
+  </div>
+
+  <div class="col-lg-8">
+    <!-- Carousel for images -->
+    <div id="cabanaCarousel" class="carousel slide mb-4 shadow-sm" data-bs-ride="carousel" *ngIf="cabana.imagenes && cabana.imagenes.length > 0">
+      <div class="carousel-inner rounded-3">
+        <div class="carousel-item" *ngFor="let img of cabana.imagenes; let i = index" [class.active]="i === 0">
+          <img [src]="img.url_imagen" class="d-block w-100" alt="Imagen de cabaña" style="height: 450px; object-fit: cover;">
+        </div>
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#cabanaCarousel" data-bs-slide="prev" *ngIf="cabana.imagenes.length > 1">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Anterior</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#cabanaCarousel" data-bs-slide="next" *ngIf="cabana.imagenes.length > 1">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Siguiente</span>
+      </button>
+    </div>
+
+    <!-- Description -->
+    <div class="card mb-4 border-0 shadow-sm rounded-3">
+      <div class="card-body p-4">
+        <h4 class="card-title text-success border-bottom pb-2 fw-semibold">Descripción</h4>
+        <p class="card-text mt-3 text-secondary" style="white-space: pre-line; line-height: 1.7;">{{ cabana.descripcion }}</p>
+      </div>
+    </div>
+
+    <!-- Interactive Calendar -->
+    <div class="card mb-4 border-0 shadow-sm rounded-3">
+      <div class="card-body p-4">
+        <h4 class="card-title text-success border-bottom pb-2 fw-semibold mb-4">Selecciona tus Fechas</h4>
+        
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <button class="btn btn-outline-success btn-sm" (click)="prevMonth()">&larr; Mes Anterior</button>
+          <h5 class="fw-bold m-0">{{ months[currentMonth] }} {{ currentYear }}</h5>
+          <button class="btn btn-outline-success btn-sm" (click)="nextMonth()">Mes Siguiente &rarr;</button>
+        </div>
+
+        <div class="calendar-grid">
+          <div class="calendar-header-day text-muted fw-bold">Dom</div>
+          <div class="calendar-header-day text-muted fw-bold">Lun</div>
+          <div class="calendar-header-day text-muted fw-bold">Mar</div>
+          <div class="calendar-header-day text-muted fw-bold">Mié</div>
+          <div class="calendar-header-day text-muted fw-bold">Jue</div>
+          <div class="calendar-header-day text-muted fw-bold">Vie</div>
+          <div class="calendar-header-day text-muted fw-bold">Sáb</div>
+
+          <div *ngFor="let day of days" 
+               class="calendar-day"
+               [class.empty]="!day.day"
+               [class.occupied]="day.isOccupied"
+               [class.past]="day.isPast"
+               [class.selected]="day.isSelected"
+               [class.in-range]="day.isRange"
+               (click)="selectDay(day)">
+            {{ day.day }}
+          </div>
+        </div>
+
+        <div class="d-flex flex-wrap gap-3 mt-3 justify-content-center">
+          <span class="badge bg-light text-dark border"><span class="legend-box open"></span> Disponible</span>
+          <span class="badge bg-light text-dark border"><span class="legend-box occupied"></span> Ocupado</span>
+          <span class="badge bg-light text-dark border"><span class="legend-box past"></span> No disponible (Pasado/Hoy)</span>
+          <span class="badge bg-light text-dark border"><span class="legend-box selected"></span> Seleccionado</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Extras Selection -->
+    <div class="card mb-4 border-0 shadow-sm rounded-3" *ngIf="extrasList.length > 0">
+      <div class="card-body p-4">
+        <h4 class="card-title text-success border-bottom pb-2 fw-semibold mb-3">Servicios Adicionales (Extras)</h4>
+        
+        <div class="row">
+          <div class="col-md-6 mb-3" *ngFor="let extra of extrasList">
+            <div class="p-3 border rounded-3 d-flex justify-content-between align-items-center">
+              <div>
+                <h6 class="fw-bold mb-1">{{ extra.nombre }}</h6>
+                <p class="text-muted small mb-1">{{ extra.descripcion }}</p>
+                <span class="text-success fw-bold">${{ extra.precio }} <small class="text-muted">/ {{ extra.tipo === 'noche' ? 'noche' : 'estadía' }}</small></span>
+              </div>
+              <div class="d-flex align-items-center gap-2">
+                <button class="btn btn-outline-secondary btn-sm" 
+                        [disabled]="selectedExtras[extra.id] <= 0"
+                        (click)="updateExtraQty(extra.id, selectedExtras[extra.id] - 1)">-</button>
+                <span class="fw-bold px-2">{{ selectedExtras[extra.id] || 0 }}</span>
+                <button class="btn btn-outline-secondary btn-sm" 
+                        (click)="updateExtraQty(extra.id, (selectedExtras[extra.id] || 0) + 1)">+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reviews -->
+    <div class="card mb-4 border-0 shadow-sm rounded-3">
+      <div class="card-body p-4">
+        <h4 class="card-title text-success border-bottom pb-2 fw-semibold">Reseñas de Huéspedes</h4>
+        <div *ngIf="cabana.resenas && cabana.resenas.length > 0; else noReviews">
+          <div class="mb-3 border-bottom pb-2 mt-3" *ngFor="let resena of cabana.resenas">
+            <div class="d-flex justify-content-between">
+              <span class="text-warning">
+                <i class="bi bi-star-fill" *ngFor="let star of [].constructor(resena.puntuacion)">&#9733;</i>
+              </span>
+              <small class="text-muted">{{ resena.fecha }}</small>
+            </div>
+            <p class="mt-2 fst-italic text-secondary">"{{ resena.comentario }}"</p>
+          </div>
+        </div>
+        <ng-template #noReviews>
+          <p class="text-muted mt-3">Aún no hay reseñas para esta cabaña. ¡Sé el primero en alojarte y dejar tu comentario!</p>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-4">
+    <!-- Booking & Checkout Panel -->
+    <div class="card shadow border-0 rounded-3 sticky-top" style="top: 20px;">
+      <div class="card-body p-4">
+        <h3 class="text-center text-success fw-bold mb-4">${{ cabana.precio_base }} <small class="text-muted fs-6">/ noche</small></h3>
+        
+        <div class="mb-3">
+          <label class="form-label fw-bold text-secondary">Fechas Seleccionadas</label>
+          <div class="p-3 bg-light rounded-3 text-center border">
+            <div *ngIf="checkInDate && checkOutDate">
+              <div class="fw-bold text-success">{{ checkInDate | date:'dd MMM, yyyy' }} &rarr; {{ checkOutDate | date:'dd MMM, yyyy' }}</div>
+              <small class="text-muted">Total: {{ totalNoches }} noches</small>
+            </div>
+            <div *ngIf="checkInDate && !checkOutDate" class="text-warning fw-bold">
+              Selecciona fecha de salida...
+            </div>
+            <div *ngIf="!checkInDate" class="text-muted">
+              Haz clic en el calendario
+            </div>
+          </div>
+        </div>
+
+        <form (ngSubmit)="confirmarPago()" #bookingForm="ngForm" class="mb-4">
+          <div class="mb-3">
+            <label class="form-label text-secondary fw-semibold">Nombre Completo</label>
+            <input type="text" class="form-control" name="nombre" [(ngModel)]="nombreCliente" required placeholder="Ej. Juan Pérez">
+          </div>
+          <div class="mb-3">
+            <label class="form-label text-secondary fw-semibold">Email de Contacto</label>
+            <input type="email" class="form-control" name="email" [(ngModel)]="emailCliente" required placeholder="juan@gmail.com">
+          </div>
+          <div class="mb-3">
+            <label class="form-label text-secondary fw-semibold">Teléfono móvil</label>
+            <input type="tel" class="form-control" name="telefono" [(ngModel)]="telefonoCliente" required placeholder="+56912345678">
+          </div>
+
+          <div class="border-top pt-3 mb-3">
+            <h5 class="fw-bold text-dark d-flex justify-content-between">
+              <span>Total Estimado:</span>
+              <span class="text-success">${{ totalPrice }}</span>
+            </h5>
+          </div>
+
+          <button type="submit" 
+                  class="btn btn-success w-100 btn-lg shadow-sm"
+                  [disabled]="!checkInDate || !checkOutDate || !bookingForm.valid || bookingLoading">
+            <span *ngIf="bookingLoading" class="spinner-border spinner-border-sm me-2"></span>
+            {{ bookingLoading ? 'Procesando...' : 'Confirmar y Pagar' }}
+          </button>
+        </form>
+
+        <p class="text-center text-muted m-0"><small><i class="bi bi-shield-lock-fill text-success"></i> Pago seguro con Mercado Pago</small></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="!loading && !cabana" class="alert alert-danger mt-5">
+  No se encontró la cabaña solicitada.
+</div>

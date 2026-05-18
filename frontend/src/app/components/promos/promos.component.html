@@ -1,0 +1,194 @@
+<div class="container my-5 py-4">
+  <!-- Promos Header -->
+  <div class="promos-hero text-center p-5 rounded-4 mb-5 text-white position-relative overflow-hidden shadow-lg">
+    <div class="position-relative z-index-2">
+      <span class="badge bg-warning text-dark px-3 py-2 fw-bold mb-3 uppercase tracking-wider">🌿 Experiencias Inolvidables</span>
+      <h1 class="display-4 fw-bold">Promociones Especiales</h1>
+      <p class="lead max-w-700 mx-auto mt-2 text-white-50">
+        Disfruta de momentos únicos en medio de la precordillera de Linares y el Santuario de la Naturaleza Río Achibueno. Elige tu experiencia ideal y resérvala directamente con nuestro calendario integrado.
+      </p>
+    </div>
+    <div class="hero-overlay"></div>
+  </div>
+
+  <!-- Step 1: Selecciona tu Experiencia -->
+  <div class="text-center mb-5">
+    <h2 class="section-title">1. Elige tu Experiencia</h2>
+    <p class="text-muted">Selecciona una promoción para ver sus beneficios, restricciones y activar el calendario de reservas.</p>
+    
+    <div class="row g-4 justify-content-center mt-3">
+      <div class="col-md-4" *ngFor="let promo of promos">
+        <div class="card h-100 border-0 shadow-sm card-hover-shadow p-4 cursor-pointer text-start transition-all"
+             [class.active-promo-card]="selectedPromo.id === promo.id"
+             [style.border-top]="'5px solid ' + promo.color"
+             (click)="onSelectPromo(promo)">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <span class="fs-1">{{ promo.emoji }}</span>
+            <span *ngIf="promo.destacado" class="badge bg-success px-2 py-1">MÁS POPULAR</span>
+          </div>
+          <h4 class="fw-bold text-dark mb-1">{{ promo.titulo }}</h4>
+          <p class="small fw-semibold mb-2" [style.color]="promo.color">{{ promo.tagline }}</p>
+          <p class="text-secondary small mb-0 flex-grow-1" style="line-height: 1.5;">{{ promo.descripcion }}</p>
+          
+          <div class="mt-3 pt-2 border-top text-muted small">
+            <i class="bi bi-calendar3 me-1"></i> Duración: 
+            <span class="fw-bold" *ngIf="promo.minNoches === promo.maxNoches">exactamente {{ promo.minNoches }} noche</span>
+            <span class="fw-bold" *ngIf="promo.minNoches !== promo.maxNoches">{{ promo.minNoches }} a {{ promo.maxNoches }} noches</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Booking Core Layout (Triggered when Promo is Selected) -->
+  <div class="row g-4 mt-5" *ngIf="selectedPromo">
+    
+    <!-- Left Column: Cabaña and Client Info -->
+    <div class="col-lg-5">
+      <div class="card border-0 shadow-sm p-4 h-100 bg-white" style="border-radius: 16px;">
+        <h3 class="fw-bold text-dark mb-4 d-flex align-items-center">
+          <span class="me-2 text-success">2.</span> Configura tu Estadía
+        </h3>
+
+        <!-- Cabaña Selection -->
+        <label class="form-label fw-bold text-secondary mb-2">Selecciona tu Cabaña:</label>
+        <div class="row g-2 mb-4">
+          <div class="col-4" *ngFor="let cab of cabanasList">
+            <div class="card border p-2 text-center cabin-selector shadow-none cursor-pointer transition-all"
+                 [class.active-cabin]="selectedCabana?.id === cab.id"
+                 (click)="onSelectCabana(cab)">
+              <div class="fs-4">🏡</div>
+              <div class="fw-bold small text-truncate mt-1">{{ cab.nombre }}</div>
+              <div class="text-success small fw-semibold" style="font-size: 0.75rem;">${{ cab.precio_base | number:'1.0-0' }}/n</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Inclusions Summary -->
+        <div class="p-3 bg-light rounded-4 mb-4" [style.border-left]="'4px solid ' + selectedPromo.color">
+          <h5 class="fw-bold text-dark mb-2">🎁 Beneficios del Paquete Incluidos:</h5>
+          <ul class="list-unstyled mb-0">
+            <li class="small text-secondary mb-2 d-flex align-items-start" *ngFor="let benefit of selectedPromo.detallesList">
+              <i class="bi bi-gift-fill text-success me-2 mt-1" style="font-size: 0.85rem;"></i>
+              <span>{{ benefit }}</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Client Form -->
+        <h5 class="fw-bold text-dark mb-3">Tus Datos de Contacto:</h5>
+        <div class="mb-3">
+          <label class="form-label small text-secondary">Nombre Completo:</label>
+          <input type="text" class="form-control" [(ngModel)]="nombreCliente" placeholder="Ej. Valentina Rojas">
+        </div>
+        <div class="mb-3">
+          <label class="form-label small text-secondary">Correo Electrónico:</label>
+          <input type="email" class="form-control" [(ngModel)]="emailCliente" placeholder="Ej. vale@gmail.com">
+        </div>
+        <div class="mb-3">
+          <label class="form-label small text-secondary">Teléfono de Contacto:</label>
+          <input type="text" class="form-control" [(ngModel)]="telefonoCliente" placeholder="Ej. +56912345678">
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Interactive Calendar with Night restrictions -->
+    <div class="col-lg-7">
+      <div class="card border-0 shadow-sm p-4 h-100 bg-white" style="border-radius: 16px;">
+        <h3 class="fw-bold text-dark mb-4 d-flex align-items-center">
+          <span class="me-2 text-success">3.</span> Selecciona tus Fechas
+        </h3>
+
+        <!-- Cabin Load Spinner -->
+        <div *ngIf="loadingDispo" class="text-center my-5 py-4">
+          <div class="spinner-border text-success" role="status">
+            <span class="visually-hidden">Cargando disponibilidad...</span>
+          </div>
+          <p class="text-muted small mt-2">Consultando ocupación en tiempo real...</p>
+        </div>
+
+        <!-- Interactive Calendar -->
+        <div *ngIf="!loadingDispo" class="calendar-wrapper">
+          <!-- Calendar Header -->
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-bold m-0 text-dark">{{ months[currentMonth] }} {{ currentYear }}</h5>
+            <div class="d-flex gap-2">
+              <button class="btn btn-outline-secondary btn-sm" (click)="prevMonth()"><i class="bi bi-chevron-left"></i></button>
+              <button class="btn btn-outline-secondary btn-sm" (click)="nextMonth()"><i class="bi bi-chevron-right"></i></button>
+            </div>
+          </div>
+
+          <!-- Weekdays -->
+          <div class="weekdays-grid text-center text-muted fw-bold mb-2">
+            <div>Dom</div><div>Lun</div><div>Mar</div><div>Mié</div><div>Jue</div><div>Vie</div><div>Sáb</div>
+          </div>
+
+          <!-- Days Grid -->
+          <div class="days-grid text-center mb-4">
+            <div *ngFor="let dayObj of days" 
+                 class="calendar-day d-flex align-items-center justify-content-center flex-column"
+                 [class.empty-cell]="!dayObj.day"
+                 [class.past-cell]="dayObj.isPast"
+                 [class.occupied-cell]="dayObj.isOccupied"
+                 [class.selected-cell]="dayObj.isSelected"
+                 [class.range-cell]="dayObj.isRange"
+                 (click)="selectDay(dayObj)">
+              <span class="day-number" *ngIf="dayObj.day">{{ dayObj.day }}</span>
+              <small class="occupied-tag" *ngIf="dayObj.isOccupied">Ocupado</small>
+            </div>
+          </div>
+
+          <!-- Calendar Legends -->
+          <div class="d-flex justify-content-center gap-3 flex-wrap small text-muted border-top pt-3 mb-4">
+            <div class="d-flex align-items-center"><span class="legend-color legend-selected me-1"></span> Seleccionado</div>
+            <div class="d-flex align-items-center"><span class="legend-color legend-range me-1"></span> Rango Reserva</div>
+            <div class="d-flex align-items-center"><span class="legend-color legend-occupied me-1"></span> Ocupado</div>
+            <div class="d-flex align-items-center"><span class="legend-color legend-available me-1"></span> Disponible</div>
+          </div>
+
+          <!-- Booking Summary Box -->
+          <div class="p-3 bg-light rounded-4 border-dashed border-success">
+            <h5 class="fw-bold text-success mb-3"><i class="bi bi-receipt-cutoff me-1"></i> Resumen de tu Promoción</h5>
+            
+            <div class="row g-3">
+              <div class="col-6">
+                <span class="text-secondary small">Cabaña Elegida:</span>
+                <div class="fw-bold text-dark">{{ selectedCabana?.nombre || 'Ninguna' }}</div>
+              </div>
+              <div class="col-6">
+                <span class="text-secondary small">Duración Estadía:</span>
+                <div class="fw-bold text-dark">
+                  {{ totalNoches }} noches 
+                  <span class="badge bg-warning text-dark ms-1 small" *ngIf="totalNoches > 0">
+                    Restricción {{ selectedPromo.minNoches }}<span *ngIf="selectedPromo.minNoches !== selectedPromo.maxNoches">-{{ selectedPromo.maxNoches }}</span> n
+                  </span>
+                </div>
+              </div>
+              <div class="col-6">
+                <span class="text-secondary small">Rango Seleccionado:</span>
+                <div class="fw-semibold text-dark" style="font-size: 0.85rem;" *ngIf="checkInDate && checkOutDate">
+                  {{ checkInDate | date:'dd/MM/yyyy' }} al {{ checkOutDate | date:'dd/MM/yyyy' }}
+                </div>
+                <div class="text-muted small" *ngIf="!checkInDate || !checkOutDate">No seleccionado</div>
+              </div>
+              <div class="col-6 text-end">
+                <span class="text-secondary d-block small">Total Estimado:</span>
+                <span class="fs-4 fw-bold text-success">${{ totalPrice | number:'1.0-0' }}</span>
+              </div>
+            </div>
+
+            <!-- Booking Action Button with loader -->
+            <button class="btn btn-success btn-lg w-100 mt-4 fw-bold shadow d-flex align-items-center justify-content-center"
+                    [disabled]="bookingLoading || !checkInDate || !checkOutDate"
+                    (click)="confirmarReservaPromocion()">
+              <span *ngIf="bookingLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+              <span><i class="bi bi-credit-card-2-front-fill me-2"></i> Reservar e Iniciar Pago Mercado Pago</span>
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

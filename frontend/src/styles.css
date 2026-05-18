@@ -1,0 +1,103 @@
+/* Global styles for Cabañas Aguapiedras */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --forest-dark: #12281a;     /* hsl(140, 38%, 11%) */
+  --forest-mid: #254d32;      /* hsl(139, 35%, 22%) */
+  --moss-green: #3f7b53;      /* hsl(140, 32%, 36%) */
+  --moss-light: #5a9e70;      /* hsl(140, 27%, 49%) */
+  --wood-warm: #5c4033;       /* hsl(20, 29%, 28%) */
+  --stone-light: #f4f6f4;     /* hsl(120, 9%, 96%) */
+  --water-clear: #eef7f8;     /* hsl(190, 31%, 95%) */
+  --water-accent: #33a8c4;    /* hsl(191, 59%, 48%) */
+  --text-dark: #202b24;       /* hsl(140, 15%, 15%) */
+  --accent-gold: #cfa148;     /* hsl(40, 56%, 55%) */
+  --font-family: 'Outfit', sans-serif;
+}
+
+body {
+  font-family: var(--font-family) !important;
+  background-color: var(--stone-light) !important;
+  color: var(--text-dark) !important;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom premium scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--stone-light);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--forest-mid);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--forest-dark);
+}
+
+/* Custom headings */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-family) !important;
+  font-weight: 700 !important;
+  color: var(--forest-dark) !important;
+}
+
+/* Primary premium button */
+.btn-success {
+  background-color: var(--moss-green) !important;
+  border-color: var(--moss-green) !important;
+  color: #fff !important;
+  font-family: var(--font-family) !important;
+  font-weight: 600 !important;
+  transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
+  border-radius: 8px !important;
+  padding: 10px 20px !important;
+}
+.btn-success:hover, .btn-success:focus {
+  background-color: var(--forest-mid) !important;
+  border-color: var(--forest-mid) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 15px rgba(37, 77, 50, 0.25) !important;
+}
+.btn-success:disabled {
+  background-color: #cccccc !important;
+  border-color: #cccccc !important;
+  color: #666666 !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Outline premium button */
+.btn-outline-success {
+  color: var(--moss-green) !important;
+  border-color: var(--moss-green) !important;
+  font-family: var(--font-family) !important;
+  font-weight: 600 !important;
+  transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
+  border-radius: 8px !important;
+  padding: 10px 20px !important;
+}
+.btn-outline-success:hover {
+  background-color: var(--moss-green) !important;
+  color: white !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 15px rgba(63, 123, 83, 0.2) !important;
+}
+
+/* Custom container adjustments */
+.container {
+  max-width: 1200px !important;
+}
+
+/* Card hover animation */
+.card-hover-shadow {
+  transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+.card-hover-shadow:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08) !important;
+}

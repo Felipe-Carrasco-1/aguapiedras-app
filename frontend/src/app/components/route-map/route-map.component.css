@@ -1,0 +1,15 @@
+.timeline {
+  margin-left: 10px;
+}
+
+.timeline-item {
+  border-left-width: 2px !important;
+}
+
+.timeline-item:last-child {
+  border-left-color: transparent !important;
+}
+
+#map {
+  background-color: #f8f9fa;
+}

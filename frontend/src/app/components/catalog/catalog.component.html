@@ -1,0 +1,343 @@
+<!-- Success Alert for Bookings (Preserved Feature) -->
+<div class="row mt-2" *ngIf="showSuccessAlert">
+  <div class="col-12 mb-4">
+    <div class="alert alert-success alert-dismissible fade show shadow border-0 p-4" role="alert" style="background-color: #e8f5e9; border-left: 5px solid #2e7d32 !important; border-radius: 8px;">
+      <div class="d-flex align-items-start">
+        <span class="fs-1 me-3" style="color: #2e7d32;">🎉</span>
+        <div>
+          <h4 class="alert-heading fw-bold" style="color: #1b5e20;">¡Reserva Confirmada Exitosamente!</h4>
+          <p class="mb-2" style="color: #2e7d32; font-size: 1.1rem;">Tu pago ha sido procesado correctamente a través de la pasarela de pagos simulada.</p>
+          <hr class="my-3" style="border-top: 1px solid rgba(0,0,0,0.1);">
+          <ul class="mb-3 text-dark-emphasis">
+            <li><strong>Código de Reserva:</strong> #AP-00{{ reservaId }}</li>
+            <li><strong>Confirmación de Pago:</strong> Recibida e ingresada al sistema.</li>
+            <li><strong>Guía de Viaje PDF:</strong> Generada y enviada a tu correo electrónico.</li>
+            <li><strong>Notificación Pre-Viaje:</strong> Enviada por correo con información del clima y recomendaciones de seguridad.</li>
+          </ul>
+          <p class="mb-0 fw-semibold text-muted" style="font-size: 0.95rem;">Por favor, revisa la bandeja de entrada (y spam) del correo electrónico registrado en tu reserva.</p>
+        </div>
+      </div>
+      <button type="button" class="btn-close" (click)="closeAlert()" aria-label="Close" style="top: 1.25rem; right: 1.25rem;"></button>
+    </div>
+  </div>
+</div>
+
+<!-- 1. SECCIÓN HERO (SITIO OFICIAL) -->
+<div class="hero-section text-center">
+  <div class="container py-5">
+    <h1 class="hero-title">Cabañas Aguapiedras</h1>
+    <p class="hero-subtitle">Descansa entre pozones naturales y bosque nativo en Pejerrey, Cajón del Achibueno. Tranquilidad, naturaleza y privacidad real.</p>
+    <div class="d-flex flex-wrap justify-content-center gap-3">
+      <a href="#cabanas" class="btn btn-success btn-lg px-4 shadow">🌿 Ver Cabañas</a>
+      <a href="https://api.whatsapp.com/send?phone=56984757176" target="_blank" class="btn whatsapp-btn btn-lg px-4 shadow">
+        <i class="bi bi-whatsapp me-2"></i> Consultar Disponibilidad
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- 2. PILARES DE VALOR / POR QUÉ ELEGIRNOS -->
+<div class="container my-5 text-center">
+  <h2 class="section-title">¿Por qué alojarte en Aguapiedras?</h2>
+  <div class="row mt-4 g-4 justify-content-center">
+    <div class="col-md-3">
+      <div class="feature-box h-100">
+        <div class="feature-icon-wrapper shadow-sm">
+          <i class="bi bi-compass"></i>
+        </div>
+        <h5 class="fw-bold mt-2">Santuario Natural</h5>
+        <p class="text-muted small mb-0">Ubicado en el Cajón del Achibueno, primer Santuario de la Naturaleza de la Región del Maule.</p>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="feature-box h-100">
+        <div class="feature-icon-wrapper shadow-sm">
+          <i class="bi bi-water"></i>
+        </div>
+        <h5 class="fw-bold mt-2">Pozones a 10 min</h5>
+        <p class="text-muted small mb-0">Disfruta de caminatas de 10 a 12 minutos directamente hacia pozones de aguas cristalinas.</p>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="feature-box h-100">
+        <div class="feature-icon-wrapper shadow-sm">
+          <i class="bi bi-tree"></i>
+        </div>
+        <h5 class="fw-bold mt-2">Privacidad Real</h5>
+        <p class="text-muted small mb-0">Cabañas rodeadas de bosque nativo que aseguran desconexión y paz absoluta, sin ruidos de ciudad.</p>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="feature-box h-100">
+        <div class="feature-icon-wrapper shadow-sm">
+          <i class="bi bi-fire"></i>
+        </div>
+        <h5 class="fw-bold mt-2">Bienestar Premium</h5>
+        <p class="text-muted small mb-0">Tinajas calientes privadas a leña en medio del bosque y masajes profesionales tailandeses.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 3. CATÁLOGO DE CABAÑAS (DINÁMICO CON TU BACKEND) -->
+<div id="cabanas" class="container my-5 text-center scroll-mt">
+  <h2 class="section-title">Nuestras Cabañas</h2>
+  <p class="text-muted mb-5">Elige la cabaña ideal para tu estadía. Cuentan con terraza de 12 metros, equipamiento total y calefacción a leña.</p>
+  
+  <div class="row g-4 justify-content-center">
+    <div class="col-md-4 mb-4" *ngFor="let cabana of cabanas">
+      <div class="card h-100 shadow-sm border-0 cabin-card card-hover-shadow">
+        <div class="cabin-image-wrapper">
+          <!-- Tag de capacidad -->
+          <span class="cabin-tag">Hasta {{ cabana.capacidad_max }} personas</span>
+          
+          <img *ngIf="cabana.imagenes && cabana.imagenes.length > 0; else noImage" 
+               [src]="cabana.imagenes[0].url_imagen" 
+               class="cabin-image" 
+               alt="{{ cabana.nombre }}">
+          <ng-template #noImage>
+            <div class="bg-secondary text-white d-flex align-items-center justify-content-center h-100">
+              <span>Sin imagen de cabaña</span>
+            </div>
+          </ng-template>
+        </div>
+
+        <div class="card-body d-flex flex-column text-start p-4">
+          <h4 class="card-title fw-bold">{{ cabana.nombre }}</h4>
+          <p class="card-text text-secondary flex-grow-1 mt-2 mb-4" style="line-height: 1.6;">
+            {{ cabana.descripcion | slice:0:130 }}...
+          </p>
+          <div class="d-flex justify-content-between align-items-center mt-auto border-top pt-3">
+            <div>
+              <span class="fs-4 fw-extrabold text-success">${{ cabana.precio_base | number:'1.0-0' }}</span>
+              <small class="text-muted block d-block" style="font-size: 0.75rem;">por noche</small>
+            </div>
+            <a [routerLink]="['/cabanas', cabana.id]" class="btn btn-outline-success">Reservar &rarr;</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mensaje si no hay cabañas cargadas -->
+    <div class="col-12 text-center my-5" *ngIf="cabanas.length === 0">
+      <div class="spinner-border text-success mb-3" role="status"></div>
+      <p class="text-muted">Cargando la magia de Aguapiedras...</p>
+    </div>
+  </div>
+</div>
+
+<!-- 4. SECCIÓN BIENESTAR: SPA & TINAJAS (SITIO OFICIAL) -->
+<!-- 4. SECCIÓN BIENESTAR Y SABOR: SERVICIOS ADICIONALES (SITIO OFICIAL) -->
+<div class="container my-5 text-center">
+  <h2 class="section-title">Servicios Adicionales</h2>
+  <p class="text-muted mb-5">Haz tu estadía en el Cajón del Achibueno una experiencia inolvidable combinando descanso, sabor y bienestar.</p>
+  
+  <div class="row g-4 justify-content-center">
+    <!-- Tinaja Caliente -->
+    <div class="col-md-6 col-lg-3">
+      <div class="card h-100 border-0 shadow-sm card-hover-shadow p-3" style="border-top: 4px solid var(--moss-green) !important; border-radius: 12px; background: #fff;">
+        <div class="fs-1 my-3 text-success">♨️</div>
+        <h5 class="fw-bold text-dark">Tinaja Caliente</h5>
+        <p class="text-secondary small flex-grow-1" style="line-height: 1.5; font-size: 0.88rem;">
+          Sumérgete bajo las estrellas en medio del bosque nativo. Aguas templadas a leña ideales para relajarse tras un día de trekking.
+        </p>
+        <div class="mt-3 pt-2 border-top">
+          <span class="fs-5 fw-bold text-success">$35.000</span>
+          <small class="text-muted d-block" style="font-size: 0.75rem;">por estadía</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Masaje Tailandés -->
+    <div class="col-md-6 col-lg-3">
+      <div class="card h-100 border-0 shadow-sm card-hover-shadow p-3" style="border-top: 4px solid var(--accent-gold) !important; border-radius: 12px; background: #fff;">
+        <div class="fs-1 my-3 text-warning">🧘‍♀️</div>
+        <h5 class="fw-bold text-dark">Masaje Tailandés</h5>
+        <p class="text-secondary small flex-grow-1" style="line-height: 1.5; font-size: 0.88rem;">
+          Autocuidado profesional en un ambiente natural. Sesiones tailandesas tradicionales para aliviar contracturas y revitalizar mente.
+        </p>
+        <div class="mt-3 pt-2 border-top">
+          <div class="d-flex justify-content-between small text-muted border-bottom py-1">
+            <span>30 min</span><span class="fw-bold text-dark">$15.000</span>
+          </div>
+          <div class="d-flex justify-content-between small text-muted border-bottom py-1">
+            <span>60 min</span><span class="fw-bold text-dark">$25.000</span>
+          </div>
+          <div class="d-flex justify-content-between small text-muted py-1">
+            <span>90 min</span><span class="fw-bold text-dark">$35.000</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Desayuno a la Cabaña -->
+    <div class="col-md-6 col-lg-3">
+      <div class="card h-100 border-0 shadow-sm card-hover-shadow p-3" style="border-top: 4px solid var(--water-accent) !important; border-radius: 12px; background: #fff;">
+        <div class="fs-1 my-3 text-info">🧺</div>
+        <h5 class="fw-bold text-dark">Desayuno en Canasta</h5>
+        <p class="text-secondary small flex-grow-1" style="line-height: 1.5; font-size: 0.88rem;">
+          Llevado a tu cabaña: pan casero caliente, mermelada y mantequilla caseras, queso, huevos de campo, fruta, jugo natural y café.
+        </p>
+        <div class="mt-3 pt-2 border-top">
+          <span class="fs-5 fw-bold text-success">$7.000</span>
+          <small class="text-muted d-block" style="font-size: 0.75rem;">por persona / noche</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panadería y Repostería -->
+    <div class="col-md-6 col-lg-3">
+      <div class="card h-100 border-0 shadow-sm card-hover-shadow p-3" style="border-top: 4px solid var(--wood-warm) !important; border-radius: 12px; background: #fff;">
+        <div class="fs-1 my-3" style="color: var(--wood-warm)">🍰</div>
+        <h5 class="fw-bold text-dark">Repostería Casera</h5>
+        <p class="text-secondary small flex-grow-1" style="line-height: 1.5; font-size: 0.88rem;">
+          Exquisita panadería dulce: kuchenes, queques tradicionales, pies y quiches vegetarianas con ingredientes locales de alta calidad.
+        </p>
+        <div class="mt-3 pt-2 border-top">
+          <span class="fs-5 fw-bold text-success">$10.000</span>
+          <small class="text-muted d-block" style="font-size: 0.75rem;">por canasta familiar</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Booking CTA -->
+  <div class="p-4 bg-white border rounded-4 mt-5 d-flex flex-wrap justify-content-between align-items-center gap-3 text-start shadow-sm" style="border-left: 5px solid var(--moss-green) !important;">
+    <div>
+      <h5 class="fw-bold m-0 text-dark">⚡ ¿Quieres combinar tu estadía con estos servicios?</h5>
+      <p class="text-secondary small m-0 mt-1">Agrégalos dinámicamente al cotizar en el checkout de cualquier cabaña o solicítalos directamente por chat.</p>
+    </div>
+    <div class="d-flex gap-2">
+      <a href="#cabanas" class="btn btn-success shadow-sm">Ver Cabañas</a>
+      <a href="https://api.whatsapp.com/send?phone=56984757176" target="_blank" class="btn whatsapp-btn shadow-sm">
+        <i class="bi bi-whatsapp"></i> Chat de Reserva
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- 5. SECCIÓN PROMOCIONES (SITIO OFICIAL) -->
+<div class="container my-5 text-center">
+  <h2 class="section-title">Promociones Especiales</h2>
+  <p class="text-muted mb-5">Contamos con programas pensados en entregarte una escapada a tu medida.</p>
+  
+  <div class="row g-4 justify-content-center">
+    <div class="col-md-3">
+      <div class="card h-100 p-4 border-0 promo-card text-start">
+        <div class="promo-icon">👧✨</div>
+        <h5 class="fw-bold">Noche de Chicas</h5>
+        <p class="text-secondary small mb-0 mt-2">Disfruta de una desconexión total con tus mejores amigas rodeadas de masajes, tinaja caliente y repostería exclusiva.</p>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card h-100 p-4 border-0 promo-card text-start">
+        <div class="promo-icon">💻🌲</div>
+        <h5 class="fw-bold">Semana Remota</h5>
+        <p class="text-secondary small mb-0 mt-2">Conéctate a internet inalámbrico en medio del bosque precordillerano. Ideal para teletrabajo con total silencio y naturaleza.</p>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card h-100 p-4 border-0 promo-card text-start">
+        <div class="promo-icon">💖🥂</div>
+        <h5 class="fw-bold">Escapada Romántica</h5>
+        <p class="text-secondary small mb-0 mt-2">Sorprende a tu pareja con una cabaña privada, tinaja caliente de noche y detalles de bienvenida personalizados.</p>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card h-100 p-4 border-0 promo-card text-start">
+        <div class="promo-icon">🎂🎈</div>
+        <h5 class="fw-bold">Cumpleaños Sorpresa</h5>
+        <p class="text-secondary small mb-0 mt-2">Nos encargamos de organizar sorpresas para tu ser querido: desayunos artesanales llevados a la cabaña y decoración temática.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 6. SECCIÓN OPINIONES DE GOOGLE (SITIO OFICIAL) -->
+<div class="container my-5">
+  <div class="reviews-section text-center shadow-sm">
+    <div class="d-flex justify-content-center align-items-center gap-2 mb-3">
+      <span class="fs-4 text-warning">★★★★★</span>
+      <span class="fw-bold text-dark fs-5">Reseñas de Huéspedes</span>
+      <span class="trust-badge">
+        <i class="bi bi-google me-1"></i> Google 10/10
+      </span>
+    </div>
+    <h2 class="section-title mt-0">Lo que dicen en Google</h2>
+    
+    <div class="row g-4 mt-3">
+      <div class="col-md-4">
+        <div class="review-card text-start">
+          <div class="d-flex justify-content-between mb-2">
+            <h6 class="fw-bold mb-0 text-dark">Alina Catalán</h6>
+            <span class="text-warning">★★★★★</span>
+          </div>
+          <small class="text-muted d-block mb-3">Abril 2026</small>
+          <p class="text-secondary small fst-italic mb-0">
+            "Perfecto e impecable todo; La cabaña en excelentes condiciones, muy limpia y cómoda, con unas vistas preciosas, la atención amable de su dueña. El Achibueno es otra cosa, sus aguas MUY cristalinas, 10/10, volvería sin duda!"
+          </p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="review-card text-start">
+          <div class="d-flex justify-content-between mb-2">
+            <h6 class="fw-bold mb-0 text-dark">Camila Alvarez C.</h6>
+            <span class="text-warning">★★★★★</span>
+          </div>
+          <small class="text-muted d-block mb-3">Marzo 2026</small>
+          <p class="text-secondary small fst-italic mb-0">
+            "Hermoso espacio para ir a descansar y disfrutar. Me hice masaje y estuvo increíble, fue de los mejores que he tomado. Además reservé la tinaja y fue delicioso, total privacidad y relajo. Quiero volver!!!"
+          </p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="review-card text-start">
+          <div class="d-flex justify-content-between mb-2">
+            <h6 class="fw-bold mb-0 text-dark">Jocsan Sanhueza</h6>
+            <span class="text-warning">★★★★★</span>
+          </div>
+          <small class="text-muted d-block mb-3">Mayo 2026</small>
+          <p class="text-secondary small fst-italic mb-0">
+            "Excelente estadía en Cabañas Aguapiedras. Lugar tranquilo, limpio y bien equipado, ideal para descansar. Destaca la buena atención y el entorno natural. Totalmente recomendado."
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 7. FOOTER PREMIUM (SITIO OFICIAL) -->
+<footer class="footer-section">
+  <div class="container">
+    <div class="row g-4 text-start">
+      <div class="col-md-4">
+        <h5 class="fs-4">🌿 Cabañas Aguapiedras</h5>
+        <p class="small text-white-50 mt-3" style="line-height: 1.7;">
+          Un refugio pensado para descansar, sin ruidos de ciudad y en plena naturaleza precordillerana del río Achibueno, Pejerrey.
+        </p>
+        <div class="d-flex gap-3 mt-4">
+          <a href="https://www.facebook.com/aguapiedras.cl/" target="_blank" class="footer-social-icon"><i class="bi bi-facebook"></i></a>
+          <a href="https://www.instagram.com/aguapiedras/" target="_blank" class="footer-social-icon"><i class="bi bi-instagram"></i></a>
+          <a href="https://api.whatsapp.com/send?phone=56984757176" target="_blank" class="footer-social-icon"><i class="bi bi-whatsapp"></i></a>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <h5>Explora la Zona</h5>
+        <ul class="list-unstyled d-flex flex-column gap-2 mt-3">
+          <li><a routerLink="/ruta" class="footer-link small"><i class="bi bi-chevron-right me-1"></i> Cómo llegar al Achibueno</a></li>
+          <li><a routerLink="/ruta" class="footer-link small"><i class="bi bi-chevron-right me-1"></i> Hitos del Camino a Pejerrey</a></li>
+          <li><a href="#cabanas" class="footer-link small"><i class="bi bi-chevron-right me-1"></i> Reserva tu Cabaña</a></li>
+        </ul>
+      </div>
+      <div class="col-md-4">
+        <h5>Contacto y Ubicación</h5>
+        <p class="small text-white-50 mb-2"><i class="bi bi-geo-alt-fill text-success me-2"></i> Sector Pejerrey, Cajón del Achibueno, Linares, Maule, Chile</p>
+        <p class="small text-white-50 mb-2"><i class="bi bi-telephone-fill text-success me-2"></i> +56 9 8475 7176</p>
+        <p class="small text-white-50 mb-0"><i class="bi bi-envelope-fill text-success me-2"></i> reservas&#64;aguapiedras.cl</p>
+      </div>
+    </div>
+    <div class="border-top border-secondary border-opacity-20 text-center mt-5 pt-4">
+      <p class="small text-white-50 mb-0">&copy; 2026 Cabañas Aguapiedras. Todos los derechos reservados. Desarrollado con tecnología de punta Angular + Django.</p>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,192 @@
+/* Promos Hero Banner */
+.promos-hero {
+  position: relative;
+  background-image: linear-gradient(rgba(18, 40, 26, 0.65), rgba(18, 40, 26, 0.8)), url('https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1200&q=80');
+  background-size: cover;
+  background-position: center;
+  border-radius: 20px;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, transparent 20%, rgba(18, 40, 26, 0.4) 100%);
+  pointer-events: none;
+}
+
+.z-index-2 {
+  position: relative;
+  z-index: 2;
+}
+
+.max-w-700 {
+  max-width: 700px;
+}
+
+/* Card Selection Hover Animations */
+.card-hover-shadow {
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 16px;
+}
+
+.card-hover-shadow:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(18, 40, 26, 0.08) !important;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+/* Active Promo Card styling */
+.active-promo-card {
+  background-color: var(--water-clear) !important;
+  box-shadow: 0 10px 25px rgba(37, 77, 50, 0.1) !important;
+  transform: scale(1.02);
+}
+
+/* Cabin Selector Box */
+.cabin-selector {
+  border-radius: 12px;
+  background: #fdfdfd;
+  border: 1px solid #eaeaea !important;
+  transition: all 0.3s ease;
+}
+
+.cabin-selector:hover {
+  background: #f7faf8;
+  border-color: var(--moss-green) !important;
+}
+
+.active-cabin {
+  background-color: var(--water-clear) !important;
+  border-color: var(--moss-green) !important;
+  color: var(--forest-dark) !important;
+  box-shadow: 0 4px 12px rgba(63, 123, 83, 0.15);
+}
+
+/* Interactive Calendar Grid */
+.weekdays-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  font-size: 0.85rem;
+  color: var(--forest-mid);
+}
+
+.days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.calendar-day {
+  aspect-ratio: 1.1;
+  background-color: #fcfcfc;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.03);
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--forest-dark);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  user-select: none;
+}
+
+.calendar-day:hover:not(.empty-cell):not(.past-cell):not(.occupied-cell):not(.selected-cell) {
+  background-color: #f1f5f2;
+  color: var(--moss-green);
+  border-color: var(--moss-green);
+}
+
+/* Day states */
+.empty-cell {
+  background-color: transparent;
+  border-color: transparent;
+  cursor: default;
+}
+
+.past-cell {
+  background-color: #f7f7f7;
+  color: #c0c0c0;
+  text-decoration: line-through;
+  cursor: not-allowed;
+}
+
+.occupied-cell {
+  background-color: #ffebee;
+  color: #c62828;
+  border-color: #ffcdd2;
+  cursor: not-allowed;
+}
+
+.occupied-tag {
+  font-size: 0.65rem;
+  color: #d32f2f;
+  margin-top: 2px;
+  font-weight: 500;
+}
+
+.selected-cell {
+  background-color: var(--moss-green) !important;
+  color: white !important;
+  border-color: var(--moss-green) !important;
+  box-shadow: 0 4px 10px rgba(63, 123, 83, 0.3);
+}
+
+.selected-cell .occupied-tag {
+  color: rgba(255,255,255,0.7);
+}
+
+.range-cell {
+  background-color: var(--water-clear) !important;
+  color: var(--forest-dark) !important;
+  border-color: rgba(63, 123, 83, 0.15) !important;
+}
+
+/* Legend Box */
+.legend-color {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  border-radius: 4px;
+  vertical-align: middle;
+}
+
+.legend-selected { background-color: var(--moss-green); }
+.legend-range { background-color: var(--water-clear); border: 1px solid rgba(63, 123, 83, 0.15); }
+.legend-occupied { background-color: #ffebee; border: 1px solid #ffcdd2; }
+.legend-available { background-color: #fcfcfc; border: 1px solid rgba(0, 0, 0, 0.03); }
+
+/* Border dash helper */
+.border-dashed {
+  border: 1px dashed rgba(63, 123, 83, 0.3) !important;
+}
+
+/* Keyframes animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card-hover-shadow {
+  animation: fadeInUp 0.5s ease-out both;
+}
+
+.card-hover-shadow:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.card-hover-shadow:nth-child(3) {
+  animation-delay: 0.30s;
+}

@@ -1,0 +1,8 @@
+django
+djangorestframework
+djangorestframework-simplejwt
+mercadopago
+reportlab
+django-cors-headers
+mysqlclient
+psycopg2-binary==2.9.9
